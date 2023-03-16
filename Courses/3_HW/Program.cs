@@ -59,7 +59,6 @@ namespace _3_HW
             int sum1 = 0;
             for (int i = 0; i < line.Length; i++)
             {
-                int res = 0;
                 sum1 += int.Parse(line[i].ToString());
             }
             Console.WriteLine(sum1);
