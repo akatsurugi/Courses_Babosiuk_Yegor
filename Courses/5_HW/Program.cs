@@ -10,7 +10,10 @@ namespace _5_HW
         static void Main(string[] args)
         {
             var student = new Student("Harry", "Potter", 18, "London");
-            student.PrintData();
+            student.DescribeYourself();
+
+            var student1 = new Student("Hermion", "Graynger", 18, "London", new List<string> { "Herbalogy", "Witchcraft" });
+            student1.DescribeYourself();
 
             var progCourse = new Course("Herbalogy", "Pomona Leaf");
             progCourse.AddStudent(student);
@@ -51,31 +54,67 @@ namespace _5_HW
                
                 foreach (var student in Students)
                 {
-                    student.PrintData();
+                    student.DescribeYourself();
                 }
             }
         }
 
-        public class Student
+        public class Human
         {
-            // First name, last name, age, city, courses attended (an array of courses).
             public string FirstName { get; private set; }
             public string LastName { get; private set; }
             public int Age { get; private set; }
             public string City { get; private set; }
-            public List<string> Courses { get; private set; }
 
-            public Student(string firstName, string lastName, int age, string city)
+            public Human(string firstName, string lastName, int age, string city)
             {
                 FirstName = firstName;
                 LastName = lastName;
                 Age = age;
                 City = city;
-                Courses = new List<string>();
             }
 
+            public void DescribeYourself()
+            {
+                Console.WriteLine($"FirstName {FirstName}");
+                Console.WriteLine($"LastName {LastName}");
+                Console.WriteLine($"Age {Age}");
+                Console.WriteLine($"City {City}");
+            }
+        }
+
+        public class Teacher : Human
+        {
+            public Teacher(string firstName, string lastName, int age, string city) : base(firstName, lastName, age, city) { }
+
+            public new void DescribeYourself()
+            {
+                base.DescribeYourself();
+                Console.WriteLine();
+            }
+
+        }
+
+        public class Student : Human
+        {
+            // First name, last name, age, city, courses attended (an array of courses).
+
+            private List<string> courses;
+            public List<string> Courses { get
+                {
+                    if (courses == null) return new List<string>();
+                    return courses;
+                }
+                private set
+                {
+                    courses = value;   
+                }
+            }
+
+            public Student(string firstName, string lastName, int age, string city) : base(firstName, lastName, age, city) { }
+
             public Student(string firstName, string lastName, int age, string city, List<string> courses) 
-                : this(firstName, lastName, age, city)
+                : base(firstName, lastName, age, city)
             {
                 Courses = courses;
             }
@@ -85,17 +124,15 @@ namespace _5_HW
                 Courses.Add(courseName);
             }
 
-            public void PrintData()
+            public new void DescribeYourself()
             {
-                Console.WriteLine($"FirstName {FirstName}");
-                Console.WriteLine($"LastName {LastName}");
-                Console.WriteLine($"Age {Age}");
-                Console.WriteLine($"City {City}");
+                base.DescribeYourself();
 
-                if (Courses != null || Courses.Count > 0)
+                if(Courses != null || Courses.Count > 0)
                 {
                     Console.WriteLine($"Courses {string.Join(" ", Courses)}");
                 }
+                Console.WriteLine();
             }
         }
     }
