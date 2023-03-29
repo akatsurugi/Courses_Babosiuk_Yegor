@@ -5,135 +5,90 @@ using static _5_HW.Program;
 
 namespace _5_HW
 {
-    internal class Program
+    internal partial class Program
     {
         static void Main(string[] args)
         {
-            var student = new Student("Harry", "Potter", 18, "London");
-            student.DescribeYourself();
+            var courses = new List<Course> {
+                new Course("Transfiguration"),
+                new Course("Defence Against the Dark Arts"),
+                new Course("Dark Arts")
+            };
 
-            var student1 = new Student("Hermion", "Graynger", 18, "London", new List<string> { "Herbalogy", "Witchcraft" });
-            student1.DescribeYourself();
+            var students = new List<Student> {
+                new Student("Lovegood", "Luna", 15, "London"),
+                new Student("Longbottom", "Nevil", 15, "London"),
+                new Student("Potter", "Harry", 16, "London")
+            };
 
-            var progCourse = new Course("Herbalogy", "Pomona Leaf");
-            progCourse.AddStudent(student);
-            progCourse.PrintData();
-                
-        }
-
-        public class Course
-        {
-            public string Name { get; private set; }
-            public string TeacherName { get; private set; } 
-            public int Duration { get; private set; }
-            public List<Student> Students { get; private set; }
-
-            public Course(string name, string teacherName, int duration = 120)
+            var teachers = new List<Teacher>
             {
-                Name = name;
-                TeacherName = teacherName;
-                Duration = duration;
-                Students = new List<Student>();
+                new Teacher("Dumbledore", "Albus", 50, "London"),
+                new Teacher("Moody", "Alastor", 60, "London"),
+                new Teacher("Carrow", "Alecto", 40, "London")
+            };
+
+            teachers[0].Add(courses[0]);
+            teachers[1].Add(courses[1]);
+            teachers[2].Add(courses[2]);
+
+
+            foreach (var student in students)
+            {
+                foreach (var course in courses)
+                    student.Add(course);
             }
 
-            public Course(string name, string teacherName, List<Student> students, int duration = 120) : this (name, teacherName, duration)
+            foreach (var course in courses)
             {
-                Students = students;
-            }
-
-            public void AddStudent(Student student)
-            {
-                Students.Add(student);
-            }
-
-            public void PrintData()
-            {
-                Console.WriteLine($"Name {Name}");
-                Console.WriteLine($"TeacherName {TeacherName}");
-                Console.WriteLine($"Duration {Duration}");
-               
-                foreach (var student in Students)
+                foreach(var student in students)
                 {
-                    student.DescribeYourself();
-                }
-            }
-        }
-
-        public class Human
-        {
-            public string FirstName { get; private set; }
-            public string LastName { get; private set; }
-            public int Age { get; private set; }
-            public string City { get; private set; }
-
-            public Human(string firstName, string lastName, int age, string city)
-            {
-                FirstName = firstName;
-                LastName = lastName;
-                Age = age;
-                City = city;
-            }
-
-            public void DescribeYourself()
-            {
-                Console.WriteLine($"FirstName {FirstName}");
-                Console.WriteLine($"LastName {LastName}");
-                Console.WriteLine($"Age {Age}");
-                Console.WriteLine($"City {City}");
-            }
-        }
-
-        public class Teacher : Human
-        {
-            public Teacher(string firstName, string lastName, int age, string city) : base(firstName, lastName, age, city) { }
-
-            public new void DescribeYourself()
-            {
-                base.DescribeYourself();
-                Console.WriteLine();
-            }
-
-        }
-
-        public class Student : Human
-        {
-            // First name, last name, age, city, courses attended (an array of courses).
-
-            private List<string> courses;
-            public List<string> Courses { get
-                {
-                    if (courses == null) return new List<string>();
-                    return courses;
-                }
-                private set
-                {
-                    courses = value;   
+                    course.Add(student);
                 }
             }
 
-            public Student(string firstName, string lastName, int age, string city) : base(firstName, lastName, age, city) { }
+            courses[0].Add(teachers[0]);
+            courses[1].Add(teachers[1]);
+            courses[2].Add(teachers[2]);
 
-            public Student(string firstName, string lastName, int age, string city, List<string> courses) 
-                : base(firstName, lastName, age, city)
+            // Output
+            foreach(var student in students)
             {
-                Courses = courses;
+                student.DescribeYourself();
             }
 
-            public void AddCourse(string courseName)
+            Console.WriteLine("====== Teachers =======");            
+            foreach(var teacher in teachers)
             {
-                Courses.Add(courseName);
+                teacher.DescribeYourself();
             }
 
-            public new void DescribeYourself()
-            {
-                base.DescribeYourself();
+            Console.WriteLine("====== Courses =======");
 
-                if(Courses != null || Courses.Count > 0)
-                {
-                    Console.WriteLine($"Courses {string.Join(" ", Courses)}");
-                }
-                Console.WriteLine();
+            foreach (var course in courses)
+            {
+                course.PrintData();
             }
+
+            Console.WriteLine("Find all students that has teacher by the name of student");
+            Console.WriteLine("Write Teacher Name or Student");
+            var name = Console.ReadLine();
+
+            var filteredTeachers = teachers.Where(arg => arg.FirstName.Contains(name) || arg.LastName.Contains(name));
+            
+            foreach(var teacher in filteredTeachers)
+            {
+                teacher.DescribeYourself();
+            }
+
+            var filteredStudnets = students.Where(arg => arg.FirstName.Contains(name) || arg.LastName.Contains(name));
+
+            foreach (var student in filteredStudnets)
+            {
+                student.DescribeYourself();
+            }
+
+
         }
     }
 }
